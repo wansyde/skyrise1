@@ -1,120 +1,215 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Shield, TrendingUp, Wallet, ArrowRight, BarChart3, Lock, Zap } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowRight,
+  MessageCircle,
+  X,
+  Send,
+  Megaphone,
+  ClipboardList,
+  CheckCircle2,
+  BarChart3,
+  Gift,
+  Smartphone,
+  Globe,
+  TrendingUp,
+  DollarSign,
+  Target,
+  Users,
+  ShieldCheck,
+  Eye,
+  Scaling,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import PublicLayout from "@/components/layout/PublicLayout";
+import { useState, useEffect, useCallback } from "react";
 
-const features = [
-  {
-    icon: Shield,
-    title: "Institutional Security",
-    description: "Bank-grade encryption and multi-layer security protocols protect every transaction.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Optimized Returns",
-    description: "AI-driven portfolio strategies designed for consistent, risk-adjusted performance.",
-  },
-  {
-    icon: Wallet,
-    title: "Multi-Asset Support",
-    description: "Deposit and withdraw across crypto, bank transfers, and digital payment rails.",
-  },
-  {
-    icon: BarChart3,
-    title: "Real-Time Analytics",
-    description: "Track your portfolio performance with institutional-grade charting and insights.",
-  },
-  {
-    icon: Lock,
-    title: "Regulatory Compliance",
-    description: "Fully compliant with international financial regulations and KYC standards.",
-  },
-  {
-    icon: Zap,
-    title: "Instant Settlement",
-    description: "Near-instant deposit confirmation and rapid withdrawal processing.",
-  },
+import heroCar1 from "@/assets/hero-car-1.jpg";
+import heroCar2 from "@/assets/hero-car-2.jpg";
+import heroCar3 from "@/assets/hero-car-3.jpg";
+
+const heroSlides = [heroCar1, heroCar2, heroCar3];
+
+const howItWorks = [
+  { icon: Megaphone, title: "Brands Launch Campaigns", description: "Premium automotive brands create advertising campaigns on our platform." },
+  { icon: ClipboardList, title: "Tasks Are Assigned", description: "The platform assigns simple promotional tasks to qualified promoters." },
+  { icon: CheckCircle2, title: "Promoters Complete Tasks", description: "Promoters complete assignments like sharing, reviewing, and engaging." },
+  { icon: BarChart3, title: "Brands Get Real Data", description: "Brands receive authentic engagement data and analytics in real time." },
+  { icon: Gift, title: "Promoters Earn Rewards", description: "Promoters are rewarded for every completed assignment." },
 ];
 
-const stats = [
-  { value: "$2.4B+", label: "Assets Managed" },
-  { value: "150K+", label: "Active Investors" },
-  { value: "99.9%", label: "Uptime" },
-  { value: "45+", label: "Countries" },
+const promoterBenefits = [
+  { icon: Smartphone, title: "Simple Daily Tasks", description: "Complete quick promotional assignments from your phone in minutes." },
+  { icon: Zap, title: "No Experience Required", description: "Anyone can start earning — no special skills or training needed." },
+  { icon: Globe, title: "Work From Anywhere", description: "All tasks are fully remote. Earn from any location worldwide." },
+  { icon: TrendingUp, title: "Track Earnings in Real Time", description: "Monitor your income and task progress with a live dashboard." },
+];
+
+const brandBenefits = [
+  { icon: Target, title: "AI-Powered Targeting", description: "Reach the right audiences with intelligent campaign distribution." },
+  { icon: Globe, title: "Global Reach", description: "Access promoters across 45+ countries for maximum brand exposure." },
+  { icon: Users, title: "Real User Engagement", description: "Every interaction comes from verified, authentic users." },
+  { icon: TrendingUp, title: "Improved Conversion Rates", description: "Data-driven campaigns that deliver measurable ROI." },
+];
+
+const whyChoose = [
+  { icon: Zap, title: "Intelligent Promotion System", description: "AI matches the right promoters to the right campaigns for optimal results." },
+  { icon: Eye, title: "Real User Data", description: "Transparent, verifiable engagement metrics from authentic interactions." },
+  { icon: DollarSign, title: "Transparent Earnings", description: "Clear payout structure with no hidden fees or surprise deductions." },
+  { icon: Scaling, title: "Global Scalability", description: "Built to scale from local campaigns to worldwide brand activations." },
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 24 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { delay: i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] },
   }),
 };
 
 const Index = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
+  const handlePhoneSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (phone.trim()) setSubmitted(true);
+  };
+
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40 lg:pb-32">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(217,91%,60%,0.08),_transparent_60%)]" />
-        <div className="container relative z-10 mx-auto px-6">
+      {/* Hero with image slider */}
+      <section className="relative h-[90vh] min-h-[600px] overflow-hidden">
+        {heroSlides.map((slide, i) => (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto max-w-3xl text-center"
+            key={i}
+            initial={false}
+            animate={{ opacity: currentSlide === i ? 1 : 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="absolute inset-0"
           >
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 text-sm text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
-              Platform Operational
-            </div>
-            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              Institutional-grade
-              <br />
-              <span className="text-primary">wealth management.</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-              Access professionally managed investment strategies with real-time portfolio tracking, secure deposits, and transparent performance metrics.
-            </p>
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Button asChild size="lg" className="btn-press gap-2 px-8">
-                <Link to="/register">
-                  Start Investing <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="btn-press px-8">
-                <Link to="/plans">View Plans</Link>
-              </Button>
-            </div>
+            <img
+              src={slide}
+              alt={`Premium automotive ${i + 1}`}
+              className="h-full w-full object-cover"
+            />
           </motion.div>
+        ))}
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+
+        {/* Slide indicators */}
+        <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+          {heroSlides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentSlide(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                currentSlide === i ? "w-8 bg-primary" : "w-4 bg-muted-foreground/40"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Hero content */}
+        <div className="absolute inset-0 z-10 flex items-center">
+          <div className="container mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="max-w-3xl"
+            >
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-background/40 backdrop-blur-sm px-4 py-1.5 text-sm text-muted-foreground">
+                <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+                Platform Operational
+              </div>
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl xl:text-6xl leading-tight">
+                Empowering Global Automotive Brands Through{" "}
+                <span className="text-primary">Intelligent Promotion</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base sm:text-lg text-muted-foreground leading-relaxed">
+                Earn by completing simple promotional assignments while helping premium automotive brands reach real audiences worldwide.
+              </p>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Button asChild size="lg" className="btn-press gap-2 px-8">
+                  <Link to="/register">
+                    Register <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="btn-press px-8">
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="btn-press px-6 text-muted-foreground hover:text-foreground"
+                  onClick={() => setChatOpen(true)}
+                >
+                  <MessageCircle className="mr-2 h-4 w-4" strokeWidth={1.5} />
+                  Customer Support
+                </Button>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="border-y border-border py-16">
+      {/* How It Works */}
+      <section className="py-24 border-t border-border">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            {stats.map((stat, i) => (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-16 text-center"
+          >
+            <h2 className="text-3xl font-semibold tracking-tight">How It Works</h2>
+            <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
+              A simple five-step process connecting brands with promoters.
+            </p>
+          </motion.div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+            {howItWorks.map((step, i) => (
               <motion.div
-                key={stat.label}
+                key={step.title}
                 custom={i}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
-                className="text-center"
+                className="glass-card p-6 text-center relative"
               >
-                <div className="text-3xl font-semibold tabular-nums">{stat.value}</div>
-                <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <step.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
+                </div>
+                <span className="absolute top-3 right-3 text-xs font-semibold text-muted-foreground/40">
+                  0{i + 1}
+                </span>
+                <h3 className="text-sm font-semibold">{step.title}</h3>
+                <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{step.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Features */}
+      {/* Promoter Benefits */}
       <section className="py-24">
         <div className="container mx-auto px-6">
           <motion.div
@@ -124,15 +219,15 @@ const Index = () => {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="mb-16 text-center"
           >
-            <h2 className="text-3xl font-semibold tracking-tight">Built for serious investors</h2>
+            <h2 className="text-3xl font-semibold tracking-tight">For Promoters</h2>
             <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
-              Every feature designed with security, transparency, and performance in mind.
+              Start earning today with zero experience and flexible hours.
             </p>
           </motion.div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, i) => (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {promoterBenefits.map((item, i) => (
               <motion.div
-                key={feature.title}
+                key={item.title}
                 custom={i}
                 initial="hidden"
                 whileInView="visible"
@@ -140,9 +235,79 @@ const Index = () => {
                 variants={fadeUp}
                 className="glass-card p-6"
               >
-                <feature.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
-                <h3 className="mt-4 text-base font-semibold">{feature.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                <item.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
+                <h3 className="mt-4 text-base font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Automotive Brands */}
+      <section className="py-24 border-t border-border">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-16 text-center"
+          >
+            <h2 className="text-3xl font-semibold tracking-tight">For Automotive Brands</h2>
+            <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
+              Reach real audiences and drive measurable results worldwide.
+            </p>
+          </motion.div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {brandBenefits.map((item, i) => (
+              <motion.div
+                key={item.title}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                className="glass-card p-6"
+              >
+                <item.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
+                <h3 className="mt-4 text-base font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Skyrise */}
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-16 text-center"
+          >
+            <h2 className="text-3xl font-semibold tracking-tight">Why Choose Skyrise</h2>
+            <p className="mx-auto mt-4 max-w-lg text-muted-foreground">
+              Built for transparency, performance, and global scale.
+            </p>
+          </motion.div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {whyChoose.map((item, i) => (
+              <motion.div
+                key={item.title}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                className="vault-card p-6"
+              >
+                <item.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
+                <h3 className="mt-4 text-base font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -153,18 +318,84 @@ const Index = () => {
       <section className="py-24">
         <div className="container mx-auto px-6">
           <div className="vault-card p-12 text-center lg:p-16">
-            <h2 className="text-3xl font-semibold tracking-tight">Ready to grow your wealth?</h2>
+            <h2 className="text-3xl font-semibold tracking-tight">Start Earning Today</h2>
             <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-              Join thousands of investors who trust our platform for institutional-grade returns.
+              Join thousands of promoters earning daily by helping premium automotive brands grow their audience.
             </p>
-            <Button asChild size="lg" className="btn-press mt-8 gap-2 px-8">
-              <Link to="/register">
-                Create Account <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
-              </Link>
-            </Button>
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <Button asChild size="lg" className="btn-press gap-2 px-8">
+                <Link to="/register">
+                  Register <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="btn-press px-8">
+                <Link to="/login">Login</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Floating Chat Widget */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <AnimatePresence>
+          {chatOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 16, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-3 w-80 glass-card overflow-hidden"
+            >
+              <div className="flex items-center justify-between border-b border-border p-4">
+                <span className="text-sm font-semibold">Customer Support</span>
+                <button onClick={() => setChatOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="p-4">
+                {submitted ? (
+                  <div className="text-center py-4">
+                    <CheckCircle2 className="mx-auto h-8 w-8 text-success mb-2" />
+                    <p className="text-sm font-medium">Thank you!</p>
+                    <p className="text-xs text-muted-foreground mt-1">Our team will contact you shortly.</p>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                      We are currently unavailable. Please leave your number and our team will contact you.
+                    </p>
+                    <form onSubmit={handlePhoneSubmit} className="flex gap-2">
+                      <Input
+                        type="tel"
+                        placeholder="Your phone number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="text-sm h-9"
+                      />
+                      <Button type="submit" size="sm" className="btn-press h-9 px-3">
+                        <Send className="h-3.5 w-3.5" />
+                      </Button>
+                    </form>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {!chatOpen && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 1, type: "spring", stiffness: 200 }}
+            onClick={() => setChatOpen(true)}
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:brightness-110 transition-all btn-press"
+          >
+            <MessageCircle className="h-6 w-6" />
+          </motion.button>
+        )}
+      </div>
     </PublicLayout>
   );
 };
