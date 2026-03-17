@@ -99,11 +99,16 @@ export type Database = {
           created_at: string
           email: string
           full_name: string
+          gender: string | null
           id: string
           phone: string | null
+          referral_code: string | null
+          referred_by: string | null
           status: string
           updated_at: string
           user_id: string
+          username: string | null
+          withdraw_password: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -111,11 +116,16 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string
+          gender?: string | null
           id?: string
           phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
           status?: string
           updated_at?: string
           user_id: string
+          username?: string | null
+          withdraw_password?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -123,11 +133,16 @@ export type Database = {
           created_at?: string
           email?: string
           full_name?: string
+          gender?: string | null
           id?: string
           phone?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
           status?: string
           updated_at?: string
           user_id?: string
+          username?: string | null
+          withdraw_password?: string | null
         }
         Relationships: []
       }
