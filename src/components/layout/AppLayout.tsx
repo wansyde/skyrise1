@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home, TrendingUp, Users, Wallet, User,
+  Home, Car, Users, Wallet, User,
   Menu, X, ChevronRight, FileText, Award,
   ArrowUpFromLine, ArrowDownToLine, Scale,
   Calendar, HelpCircle, Info, Shield
@@ -10,7 +10,7 @@ import {
 
 const bottomTabs = [
   { href: "/app", label: "Home", icon: Home },
-  { href: "/app/invest", label: "Invest", icon: TrendingUp },
+  { href: "/app/starting", label: "Starting", icon: Car },
   { href: "/app/team", label: "Team", icon: Users },
   { href: "/app/wallet", label: "Wallet", icon: Wallet },
   { href: "/app/profile", label: "Profile", icon: User },

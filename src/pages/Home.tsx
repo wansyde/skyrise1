@@ -2,9 +2,8 @@ import AppLayout from "@/components/layout/AppLayout";
 import { motion } from "framer-motion";
 import {
   Wallet, TrendingUp, CheckCircle2, ListChecks, Clock,
-  ArrowUpRight, Play, ChevronRight, BarChart3, Globe2, Users
+  BarChart3, Globe2, Users
 } from "lucide-react";
-import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,14 +16,6 @@ const fadeUp = {
     transition: { delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
   }),
 };
-
-const dailyTasks = [
-  { id: 1, title: "Share BMW X7 Campaign", desc: "Post the BMW X7 promo on 2 social platforms", reward: 12.50, status: "pending" },
-  { id: 2, title: "Review Mercedes-Benz Ad", desc: "Watch and engage with the Mercedes-Benz video ad", reward: 8.00, status: "completed" },
-  { id: 3, title: "Maserati Survey Response", desc: "Complete the Maserati brand perception survey", reward: 15.00, status: "pending" },
-  { id: 4, title: "Rolls Royce Content Share", desc: "Share Rolls Royce content to your network", reward: 10.00, status: "completed" },
-  { id: 5, title: "Audi Campaign Engagement", desc: "Like and comment on Audi launch posts", reward: 6.50, status: "pending" },
-];
 
 const brandLogos = ["British Airways", "Chanel", "Porsche", "Bentley", "Aston Martin"];
 
@@ -55,15 +46,14 @@ const Home = () => {
   });
 
   const balance = profile?.balance ?? 0;
-  const completedTasks = dailyTasks.filter(t => t.status === "completed").length;
-  const totalTasks = dailyTasks.length;
-  const todayEarnings = dailyTasks.filter(t => t.status === "completed").reduce((s, t) => s + t.reward, 0);
+  const totalInvested = investments?.reduce((sum, inv) => sum + Number(inv.amount), 0) ?? 0;
+  const accruedReturns = investments?.reduce((s, i) => s + Number(i.accrued_return), 0) ?? 0;
 
   const summaryStats = [
     { label: "Total Balance", value: `$${balance.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: Wallet, accent: "text-primary" },
-    { label: "Today's Earnings", value: `$${todayEarnings.toFixed(2)}`, icon: TrendingUp, accent: "text-success" },
-    { label: "Tasks Completed", value: `${completedTasks}/${totalTasks}`, icon: CheckCircle2, accent: "text-success" },
-    { label: "Active Tasks", value: `${totalTasks - completedTasks}`, icon: ListChecks, accent: "text-warning" },
+    { label: "Accrued Returns", value: `$${accruedReturns.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: TrendingUp, accent: "text-success" },
+    { label: "Invested", value: `$${totalInvested.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: CheckCircle2, accent: "text-primary" },
+    { label: "Transactions", value: `${recentTxns?.length ?? 0}`, icon: ListChecks, accent: "text-muted-foreground" },
   ];
 
   const caseStudyCards = [
@@ -326,71 +316,6 @@ const Home = () => {
           </motion.div>
         </div>
 
-        {/* DAILY PROGRESS */}
-        <div className="px-4 mt-8">
-          <div className="glass-card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium">Daily Progress</h3>
-              <span className="text-xs text-muted-foreground tabular-nums">{completedTasks} / {totalTasks} tasks</span>
-            </div>
-            <div className="progress-track h-3">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${(completedTasks / totalTasks) * 100}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="progress-fill h-3"
-              />
-            </div>
-            <div className="flex justify-between mt-2">
-              <span className="text-[11px] text-muted-foreground">{Math.round((completedTasks / totalTasks) * 100)}% complete</span>
-              <span className="text-[11px] text-success tabular-nums">+${todayEarnings.toFixed(2)} earned</span>
-            </div>
-          </div>
-        </div>
-
-        {/* YOUR DAILY TASKS */}
-        <div className="px-4 mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Your Daily Tasks</h2>
-            <span className="text-xs text-primary">{totalTasks - completedTasks} remaining</span>
-          </div>
-          <div className="flex flex-col gap-3">
-            {dailyTasks.map((task, i) => (
-              <motion.div
-                key={task.id}
-                custom={i}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                className="glass-card p-4"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h4 className="text-sm font-medium truncate">{task.title}</h4>
-                      {task.status === "completed" ? (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-success/10 text-success flex-shrink-0">Done</span>
-                      ) : (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-warning/10 text-warning flex-shrink-0">Pending</span>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">{task.desc}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className="text-sm font-semibold text-success tabular-nums">+${task.reward.toFixed(2)}</span>
-                    {task.status === "pending" && (
-                      <button className="flex items-center gap-1 text-[11px] font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-lg btn-press transition-all duration-200 hover:brightness-110">
-                        <Play className="h-3 w-3" />
-                        Start
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
 
         {/* RECENT ACTIVITY */}
         <div className="px-4 mt-8 mb-6">
