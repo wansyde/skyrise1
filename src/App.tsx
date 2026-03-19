@@ -21,6 +21,7 @@ import ResetPassword from "./pages/ResetPassword";
 // App pages (mobile-first dashboard)
 import Home from "./pages/Home";
 import Invest from "./pages/Invest";
+import Starting from "./pages/Starting";
 import Team from "./pages/Team";
 import WalletPage from "./pages/WalletPage";
 import Profile from "./pages/Profile";
