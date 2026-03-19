@@ -47,15 +47,14 @@ const Home = () => {
   });
 
   const balance = profile?.balance ?? 0;
-  const completedTasks = dailyTasks.filter(t => t.status === "completed").length;
-  const totalTasks = dailyTasks.length;
-  const todayEarnings = dailyTasks.filter(t => t.status === "completed").reduce((s, t) => s + t.reward, 0);
+  const totalInvested = investments?.reduce((sum, inv) => sum + Number(inv.amount), 0) ?? 0;
+  const accruedReturns = investments?.reduce((s, i) => s + Number(i.accrued_return), 0) ?? 0;
 
   const summaryStats = [
     { label: "Total Balance", value: `$${balance.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: Wallet, accent: "text-primary" },
-    { label: "Today's Earnings", value: `$${todayEarnings.toFixed(2)}`, icon: TrendingUp, accent: "text-success" },
-    { label: "Tasks Completed", value: `${completedTasks}/${totalTasks}`, icon: CheckCircle2, accent: "text-success" },
-    { label: "Active Tasks", value: `${totalTasks - completedTasks}`, icon: ListChecks, accent: "text-warning" },
+    { label: "Accrued Returns", value: `$${accruedReturns.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: TrendingUp, accent: "text-success" },
+    { label: "Invested", value: `$${totalInvested.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, icon: CheckCircle2, accent: "text-primary" },
+    { label: "Transactions", value: `${recentTxns?.length ?? 0}`, icon: ListChecks, accent: "text-muted-foreground" },
   ];
 
   const caseStudyCards = [
