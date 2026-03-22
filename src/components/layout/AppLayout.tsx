@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home, Car, Users, Wallet, User,
+  Home, Car, ClipboardList, Wallet, User,
   Menu, X, ChevronRight, FileText, Award,
   ArrowUpFromLine, ArrowDownToLine, Scale,
   Calendar, HelpCircle, Info, Shield
